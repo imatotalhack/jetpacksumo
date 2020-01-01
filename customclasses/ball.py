@@ -5,7 +5,7 @@ class Ball:
     """
     Class to keep track of a ball's location and vector.
     """
-    def __init__(self, color, BALL_SIZE, GRAVITY):
+    def __init__(self, color, BALL_SIZE, gamevar):
         self.x = 0.0
         self.y = 0.0
         self.change_x = 0.0
@@ -23,10 +23,10 @@ class Ball:
          else:
              return False
 
-    def friction(self, x, GRAVITY):
+    def friction(self, x, gamevar):
         if x != 0:
-            x = (x/abs(x))*(abs(x) - abs(GRAVITY/5))
-            if abs(x) < abs(GRAVITY/10):
+            x = (x/abs(x))*(abs(x) - abs(gamevar.gravity/5))
+            if abs(x) < abs(gamevar.gravity/10):
                 x = 0
         return x
 
