@@ -208,6 +208,7 @@ def main():
             ball.change_x = ball.friction(ball.change_x, GRAVITY)
             ball.change_y = ball.friction(ball.change_y, GRAVITY)
             ball.x += ball.change_x
+            ball.y += ball.change_y
             #ball.change_y = ball.change_y - GRAVITY
             if ball.moveup:
                 ball.change_y = ball.change_y - 0.5*abs(GRAVITY)
@@ -218,7 +219,7 @@ def main():
             if ball.movedown:
                 ball.change_y = ball.change_y + 0.5*abs(GRAVITY)
 
-            ball.y += ball.change_y
+            
 
         # --- Drawing
         # Set the screen background
