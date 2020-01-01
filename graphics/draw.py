@@ -104,6 +104,16 @@ def draw_flames(ball_list, screen, YELLOW, ORANGE):
             pygame.draw.circle(screen, ball.color, [round(ball.x), round(ball.y)], round(ball.size))
     return screen
 
+def draw_arena(screen, arena, SCREEN_HEIGHT, BROWN, WHITE):
+    #Draw the rectangle around the ring
+    pygame.draw.rect(screen, BROWN, [round(arena.x - arena.size*1.1), 0, round(arena.size*2.3), SCREEN_HEIGHT])
+    #Draw the starting lines in the ring
+    pygame.draw.rect(screen, WHITE, [arena.x - round(arena.size/4),arena.y - round(arena.size/4), 5, round(arena.size/2)])
+    pygame.draw.rect(screen, WHITE, [arena.x + round(arena.size/4 -5),arena.y - round(arena.size/4), 5, round(arena.size/2)])
+    #Draw the Ring
+    pygame.draw.circle(screen, arena.color, [round(arena.x), round(arena.y)], round(arena.size), 15)
+    return screen
+
 def main():
     print("draw has been imported")
 

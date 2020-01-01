@@ -11,6 +11,7 @@ import random
 import math
 from customclasses.ball import Ball
 from graphics.draw import draw_flames
+from graphics.draw import draw_arena
 from data.vardata import *
 
 def reset(ball_list, arena, score):
@@ -29,8 +30,8 @@ def reset(ball_list, arena, score):
         print(ball.x)
         print(ball.size)
         #ball.y = SCREEN_HEIGHT/2 + ((math.sqrt((SCREEN_WIDTH*0.30)**2 - ((SCREEN_WIDTH/2 - ball.x)**2))))
-        ball.change_x = 0.0
-        ball.change_y = 0.0
+        ball.speed_x = 0.0
+        ball.speed_y = 0.0
         ball.moveup = False
         ball.moveleft = False
         ball.moveright = False
@@ -63,21 +64,10 @@ def make_ball(color):
     # Starting position of the ball.
     # Take into account the ball size so we don't spawn on the edge.
     # Speed and direction of rectangle
-    ball.change_x = 0.0
-    ball.change_y = 0.0
+    ball.speed_x = 0.0
+    ball.speed_y = 0.0
 
     return ball
-
-def draw_arena(screen, arena):
-    #Draw the rectangle around the ring
-    pygame.draw.rect(screen, BROWN, [round(arena.x - arena.size*1.1), 0, round(arena.size*2.3), SCREEN_HEIGHT])
-    #Draw the starting lines in the ring
-    pygame.draw.rect(screen, WHITE, [arena.x - round(arena.size/4),arena.y - round(arena.size/4), 5, round(arena.size/2)])
-    pygame.draw.rect(screen, WHITE, [arena.x + round(arena.size/4 -5),arena.y - round(arena.size/4), 5, round(arena.size/2)])
-    #Draw the Ring
-    pygame.draw.circle(screen, arena.color, [round(arena.x), round(arena.y)], round(arena.size), 15)
-    return screen
-
 
 def main():
     """
@@ -172,22 +162,24 @@ def main():
                     #ball_list.append(ball)
 
         # --- Logic
-        #basically switches the player 1 and player 2 speeds in a messy way. Recode layer
+        #basically switches the player 1 and player 2 speeds in a messy way. Recode later
         if player_1.collision_detect_alt(player_2):
-            temp_change_x = player_1.change_x
-            temp_change_y = player_1.change_y
+            temp_speed_x = player_1.speed_x
+            temp_speed_y = player_1.speed_y
             print("COLLISION!")
-            player_1.change_x = player_2.change_x*1.5
-            player_1.change_y = player_2.change_y*1.5
-            player_2.change_x = temp_change_x*1.5
-            player_2.change_y = temp_change_y*1.5
+            player_1.speed_x = player_2.speed_x*1.5
+            player_1.speed_y = player_2.speed_y*1.5
+            player_2.speed_x = temp_speed_x*1.5
+            player_2.speed_y = temp_speed_y*1.5
             player_1.size += 1
             player_2.size += 1
 
+        #pauses the game for a second to show who won the round, then resets the round
         if winner == True:
             pygame.time.wait(1000)
             ball_list, arena, text, text2, text3, winner = reset(ball_list, arena, score)
 
+        #declares player 1 the winner
         if winner == False and player_1.collision_detect_alt(arena) and not player_2.collision_detect_alt(arena):
             arena.color = WHITE
             print("Player 1 wins!")
@@ -195,6 +187,7 @@ def main():
             score[0] += 1
             score[1] += 1
             winner = True
+        #declares player 2 the winner
         elif winner == False and player_2.collision_detect_alt(arena) and not player_1.collision_detect_alt(arena):
             arena.color = RED
             text = font.render('PLAYER 2 WINS!', True, RED)
@@ -202,35 +195,36 @@ def main():
             score[2] += 1
             winner = True
 
+        #calculates the ball/players's new positon
         for ball in ball_list:
             # Move the ball's center
-            ball_index = ball_list.index(ball)
-            ball.change_x = ball.friction(ball.change_x, GRAVITY)
-            ball.change_y = ball.friction(ball.change_y, GRAVITY)
-            ball.x += ball.change_x
-            ball.y += ball.change_y
-            #ball.change_y = ball.change_y - GRAVITY
-            if ball.moveup:
-                ball.change_y = ball.change_y - 0.5*abs(GRAVITY)
-            if ball.moveleft:
-                ball.change_x = ball.change_x - 0.5*abs(GRAVITY)
-            if ball.moveright:
-                ball.change_x = ball.change_x + 0.5*abs(GRAVITY)
-            if ball.movedown:
-                ball.change_y = ball.change_y + 0.5*abs(GRAVITY)
+            ball.speed_x = ball.friction(ball.speed_x, GRAVITY)
+            ball.speed_y = ball.friction(ball.speed_y, GRAVITY)
+            ball.x += ball.speed_x
+            ball.y += ball.speed_y
 
-            
+            #This adjusts the speed based on the player input
+            if ball.moveup:
+                ball.speed_y = ball.speed_y - 0.5*abs(GRAVITY)
+            if ball.moveleft:
+                ball.speed_x = ball.speed_x - 0.5*abs(GRAVITY)
+            if ball.moveright:
+                ball.speed_x = ball.speed_x + 0.5*abs(GRAVITY)
+            if ball.movedown:
+                ball.speed_y = ball.speed_y + 0.5*abs(GRAVITY)
 
         # --- Drawing
         # Set the screen background
         screen.fill(BLACK)
+        #sets up positons for the text objects
         textRect = text.get_rect()
         textRect.center = (round(SCREEN_WIDTH/2),round(SCREEN_HEIGHT/1.5))
         textRect2 = text2.get_rect()
         textRect2.center = (50, round(SCREEN_HEIGHT/2))
         textRect3 = text3.get_rect()
         textRect3.center = (round(SCREEN_WIDTH -50), round(SCREEN_HEIGHT/2))
-        screen = draw_arena(screen, arena)
+        screen = draw_arena(screen, arena, SCREEN_HEIGHT, BROWN, WHITE)
+        #draws the text onto the screen
         screen.blit(text, textRect)
         screen.blit(text2, textRect2)
         screen.blit(text3, textRect3)
