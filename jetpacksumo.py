@@ -174,15 +174,13 @@ def main():
         # --- Logic
         #basically switches the player 1 and player 2 speeds in a messy way. Recode layer
         if player_1.collision_detect_alt(player_2):
-            temp_change_x_1 = player_1.change_x
-            temp_change_x_2 = player_2.change_x
-            temp_change_y_1 = player_1.change_y
-            temp_change_y_2 = player_2.change_y
+            temp_change_x = player_1.change_x
+            temp_change_y = player_1.change_y
             print("COLLISION!")
-            player_1.change_x = temp_change_x_2*1.5
-            player_2.change_x = temp_change_x_1*1.5
-            player_1.change_y = temp_change_y_2*1.5
-            player_2.change_y = temp_change_y_1*1.5
+            player_1.change_x = player_2.change_x*1.5
+            player_1.change_y = player_2.change_y*1.5
+            player_2.change_x = temp_change_x*1.5
+            player_2.change_y = temp_change_y*1.5
             player_1.size += 1
             player_2.size += 1
 
