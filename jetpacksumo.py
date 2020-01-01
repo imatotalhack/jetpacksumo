@@ -81,7 +81,7 @@ def main():
     font = pygame.font.Font('freesansbold.ttf', 32)
     font_big = pygame.font.Font('freesansbold.ttf', 80)
     score = [1,0,0] #this keeps track of the round number, player 1's wins, and player 2's wins
-    message = str("ROUND # " + str(score[0]))
+    message = "ROUND # " + str(score[0])
     text = font.render(message, True, LIGHTBROWN)
     text2 = font_big.render("0", True, WHITE)
     text3 = font_big.render("0", True, RED)
