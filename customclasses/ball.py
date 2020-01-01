@@ -10,7 +10,7 @@ class Ball:
         self.y = 0.0
         self.change_x = 0.0
         self.change_y = 0.0
-        self.booster = False
+        self.moveup = False
         self.moveleft = False
         self.moveright = False
         self.movedown = False

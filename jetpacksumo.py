@@ -31,7 +31,7 @@ def reset(ball_list, arena, score):
         #ball.y = SCREEN_HEIGHT/2 + ((math.sqrt((SCREEN_WIDTH*0.30)**2 - ((SCREEN_WIDTH/2 - ball.x)**2))))
         ball.change_x = 0.0
         ball.change_y = 0.0
-        ball.booster = False
+        ball.moveup = False
         ball.moveleft = False
         ball.moveright = False
         ball.movedown = False
@@ -131,7 +131,7 @@ def main():
                 done = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    player_1.booster = True
+                    player_1.moveup = True
                 if event.key == pygame.K_a:
                     player_1.moveleft = True
                 if event.key == pygame.K_d:
@@ -143,7 +143,7 @@ def main():
                         ball_list, arena, text, text2, text3, winner= reset(ball_list, arena, score)
                 #Player 2 controls
                 if event.key == pygame.K_UP:
-                    player_2.booster = True
+                    player_2.moveup = True
                 if event.key == pygame.K_LEFT:
                     player_2.moveleft = True
                 if event.key == pygame.K_RIGHT:
@@ -153,7 +153,7 @@ def main():
             #What happens when the key is released
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_w:
-                        player_1.booster = False
+                        player_1.moveup = False
                 if event.key == pygame.K_a:
                         player_1.moveleft = False
                 if event.key == pygame.K_d:
@@ -161,7 +161,7 @@ def main():
                 if event.key == pygame.K_s:
                     player_1.movedown = False
                 if event.key == pygame.K_UP:
-                        player_2.booster = False
+                        player_2.moveup = False
                 if event.key == pygame.K_LEFT:
                         player_2.moveleft = False
                 if event.key == pygame.K_RIGHT:
@@ -209,7 +209,7 @@ def main():
             ball.change_y = ball.friction(ball.change_y, GRAVITY)
             ball.x += ball.change_x
             #ball.change_y = ball.change_y - GRAVITY
-            if ball.booster:
+            if ball.moveup:
                 ball.change_y = ball.change_y - 0.5*abs(GRAVITY)
             if ball.moveleft:
                 ball.change_x = ball.change_x - 0.5*abs(GRAVITY)

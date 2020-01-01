@@ -5,7 +5,7 @@ def draw_flames(ball_list, screen, YELLOW, ORANGE):
     for ball in ball_list:
             randbig = random.randrange(ball.size*2, ball.size*3)
             randsmall = random.randrange(ball.size, ball.size*2)
-            if ball.booster and ball.moveright:
+            if ball.moveup and ball.moveright:
                 # This draws a triangle using the polygon command
                 pygame.draw.polygon(screen, YELLOW,
                    [[round(ball.x), round(ball.y + ball.size)],
@@ -17,7 +17,7 @@ def draw_flames(ball_list, screen, YELLOW, ORANGE):
                    [round(ball.x - ball.size), round(ball.y)],
                    [round(ball.x - randsmall/1.5),
                    round(ball.y + randsmall/1.5)]])
-            elif ball.booster and ball.moveleft:
+            elif ball.moveup and ball.moveleft:
                 # This draws a triangle using the polygon command
                 pygame.draw.polygon(screen, YELLOW,
                    [[round(ball.x), round(ball.y + ball.size)],
@@ -53,7 +53,7 @@ def draw_flames(ball_list, screen, YELLOW, ORANGE):
                    [round(ball.x + ball.size), round(ball.y)],
                    [round(ball.x + randsmall/1.5),
                    round(ball.y - randsmall/1.5)]])
-            elif ball.booster:
+            elif ball.moveup:
                 # This draws a triangle using the polygon command
                 pygame.draw.polygon(screen, YELLOW,
                    [[round(ball.x - ball.size), round(ball.y)],
