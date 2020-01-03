@@ -16,6 +16,7 @@ class Ball:
         self.movedown = False
         self.color = color
         self.size = BALL_SIZE
+        self.mass = 1.0
 
     def collision_detect_alt(self, othercircle):
          if(math.sqrt((self.x-othercircle.x)**2+(self.y-othercircle.y)**2)<=self.size+othercircle.size):
@@ -25,8 +26,8 @@ class Ball:
 
     def friction(self, x, gamevar):
         if x != 0:
-            x = (x/abs(x))*(abs(x) - abs(gamevar.gravity/5))
-            if abs(x) < abs(gamevar.gravity/10):
+            x = (x/abs(x))*(abs(x) - abs(gamevar.gravity/2.5))
+            if abs(x) < abs(gamevar.gravity/15):
                 x = 0
         return x
 

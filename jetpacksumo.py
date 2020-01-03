@@ -105,19 +105,14 @@ def keypress_detect(pygame, player_1, player_2, done):
                     player_2.moveright = False
             if event.key == pygame.K_DOWN:
                 player_2.movedown = False
-    return player_1, player_2, done
+    return done
 
 def check_player_collisions(player_1, player_2):
     if player_1.collision_detect_alt(player_2):
-        temp_speed_x = player_1.speed_x
-        temp_speed_y = player_1.speed_y
-        print("COLLISION!")
-        player_1.speed_x = player_2.speed_x*1.5
-        player_1.speed_y = player_2.speed_y*1.5
-        player_2.speed_x = temp_speed_x*1.5
-        player_2.speed_y = temp_speed_y*1.5
-        player_1.size += 1
-        player_2.size += 1
+        player_1_massratio = player_2.size/player_1.size
+        player_2_massratio = player_1.size/player_2.size
+        player_1.speed_x, player_2.speed_x = player_2.speed_x*player_1_massratio, player_1.speed_x*player_2_massratio
+        player_1.speed_y, player_2.speed_y = player_2.speed_y*player_1_massratio, player_1.speed_y*player_2_massratio
     return player_1, player_2
 
 def draw_text(screen, text, text2, text3, arena):
@@ -133,6 +128,42 @@ def draw_text(screen, text, text2, text3, arena):
     screen.blit(text2, textRect2)
     screen.blit(text3, textRect3)
     return screen
+
+def move_ball(ball_list):
+    for ball in ball_list:
+        # Move the ball's center
+        ball.speed_x = ball.friction(ball.speed_x, gamevar)
+        ball.speed_y = ball.friction(ball.speed_y, gamevar)
+        ball.x += ball.speed_x
+        ball.y += ball.speed_y
+
+        #This adjusts the speed based on the player input
+
+        if ball.moveup and ball.moveleft:
+            ball.speed_y = ball.speed_y - 0.8*abs(gamevar.gravity)
+            ball.speed_x = ball.speed_x - 0.8*abs(gamevar.gravity)
+        elif ball.moveup and ball.moveright:
+            ball.speed_y = ball.speed_y - 0.8*abs(gamevar.gravity)
+            ball.speed_x = ball.speed_x + 0.8*abs(gamevar.gravity)
+
+        elif ball.movedown and ball.moveleft:
+            ball.speed_y = ball.speed_y + 0.8*abs(gamevar.gravity)
+            ball.speed_x = ball.speed_x - 0.5*abs(gamevar.gravity)
+
+        elif ball.movedown and ball.moveright:
+            ball.speed_y = ball.speed_y + 0.8*abs(gamevar.gravity)
+            ball.speed_x = ball.speed_x + 0.8*abs(gamevar.gravity)
+
+        elif ball.moveup:
+            ball.speed_y = ball.speed_y - 1*abs(gamevar.gravity)
+        elif ball.moveleft:
+            ball.speed_x = ball.speed_x - 1*abs(gamevar.gravity)
+
+        elif ball.moveright:
+            ball.speed_x = ball.speed_x + 1*abs(gamevar.gravity)
+        elif ball.movedown:
+            ball.speed_y = ball.speed_y + 1*abs(gamevar.gravity)
+
 
 def main():
     """
@@ -180,7 +211,7 @@ def main():
 
     # -------- Main Program Loop -----------
     while not done:
-        player_1, player_2, done = keypress_detect(pygame, player_1, player_2, done)
+        done = keypress_detect(pygame, player_1, player_2, done)
         # --- Logic
         #basically switches the player 1 and player 2 speeds in a messy way. Recode later
         player_1, player_2 = check_player_collisions(player_1, player_2)
@@ -208,22 +239,7 @@ def main():
             winner = True
 
         #calculates the ball/players's new positon
-        for ball in ball_list:
-            # Move the ball's center
-            ball.speed_x = ball.friction(ball.speed_x, gamevar)
-            ball.speed_y = ball.friction(ball.speed_y, gamevar)
-            ball.x += ball.speed_x
-            ball.y += ball.speed_y
-
-            #This adjusts the speed based on the player input
-            if ball.moveup:
-                ball.speed_y = ball.speed_y - 0.5*abs(gamevar.gravity)
-            if ball.moveleft:
-                ball.speed_x = ball.speed_x - 0.5*abs(gamevar.gravity)
-            if ball.moveright:
-                ball.speed_x = ball.speed_x + 0.5*abs(gamevar.gravity)
-            if ball.movedown:
-                ball.speed_y = ball.speed_y + 0.5*abs(gamevar.gravity)
+        move_ball(ball_list)
 
         # --- Drawing
         # Set the screen background
